@@ -1,0 +1,9 @@
+import 'dart:convert';
+import 'package:feature/core/core_language.dart';
+import '../core_network.dart';
+part 'api/_auth_api.dart';
+part 'api/_post_api.dart';
+part 'remote_data/_post_remote_data_source.dart';
+part 'remote_data/url_factory.dart';
+part 'remote_data/_auth_remote_data_source.dart';
+part 'api_factory.dart';
