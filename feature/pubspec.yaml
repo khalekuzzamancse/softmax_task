@@ -11,6 +11,9 @@ dependencies:
   http: ^1.2.2
   rxdart: ^0.28.0
   shared_preferences: ^2.0.5
+  kz_platform:
+    path: ../core/kz_platform
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

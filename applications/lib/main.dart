@@ -1,7 +1,9 @@
+import 'package:feature/di_and_mediator/global_mediator.dart';
 import 'package:feature/entry_point.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  AppMediator.instance.init();
   runApp(const MyApp());
 }
 

@@ -20,7 +20,7 @@ class URLFactoryRemoteServer implements URLFactory {
   @override
   String get user => '$base/auth/me';
   @override
-  String get postRead => "$base/posts?limit=10&skip=0";
+  String get postRead => "$base/posts?limit=20&skip=0";
   @override
   String postDetails(String id)=>"$base/posts/$id";
 

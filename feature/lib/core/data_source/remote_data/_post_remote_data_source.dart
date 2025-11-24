@@ -2,6 +2,7 @@ part of '../data_source.dart';
 
 abstract class PostRDSTemplate implements PostApi {
   String get url => URLFactory.urls.postRead;
+  late final tag=runtimeType.toString();
 
   String detailsUrl(String id) => URLFactory.urls.postDetails(id);
   late final client = NetworkClient.createClientDecorator();
@@ -11,8 +12,10 @@ abstract class PostRDSTemplate implements PostApi {
   Post parsePostOrThrow(dynamic response);
 
   @override
-  Future<PaginationWrapper<List<Post>>> readOrThrow() async {
-    final response = await client.getOrThrow(url: url);
+  Future<PaginationWrapper<List<Post>>> readOrThrow(String? nextUrl) async {
+    Logger.on(tag, "readOrThrow:$nextUrl");
+    final response = await client.getOrThrow(url: nextUrl ?? url);
+    Logger.on(tag, "readOrThrow:$response");
     return parseOrThrow(jsonDecode(response));
   }
 
@@ -27,7 +30,6 @@ class PostRemoteDataSource extends PostRDSTemplate {
   PostRemoteDataSource._();
 
   static PostApi create() => PostRemoteDataSource._();
-
   @override
   PaginationWrapper<List<Post>> parseOrThrow(response) {
     final json = response as Map<String, dynamic>;
@@ -38,7 +40,9 @@ class PostRemoteDataSource extends PostRDSTemplate {
       final post = e as Map<String, dynamic>;
       return parsePostOrThrow(post);
     });
-    return PaginationWrapper(data: posts.toList(), count: total);
+    final nextSkip=skip+limit;
+    final String? nextUrl=nextSkip<=total? "https://dummyjson.com/posts?limit=$limit&skip=$nextSkip":null;
+    return PaginationWrapper(data: posts.toList(), nextUrl: nextUrl);
   }
 
   @override
@@ -60,4 +64,5 @@ class PostRemoteDataSource extends PostRDSTemplate {
       ),
     );
   }
+
 }

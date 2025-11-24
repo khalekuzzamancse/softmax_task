@@ -2,7 +2,7 @@ part of '../data_source.dart';
 
 /// Details structure are same that is why no api for the details fetch
 abstract interface class PostApi{
-  Future<PaginationWrapper<List<Post>>> readOrThrow();
+  Future<PaginationWrapper<List<Post>>> readOrThrow(String? nextUrl);
   Future<Post> detailsOrThrow(String id);
  }
 

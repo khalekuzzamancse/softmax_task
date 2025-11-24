@@ -6,11 +6,16 @@ import 'test_mediator.dart';
 
 void main() {
   final tag="ApiTest";
-  test('login test', () async {
+  setUpAll(()async{
     final api = ApiFactory.create().auth();
     final response = await api.loginOrThrow('emilys', 'emilyspass');
     TestMediator.setTokens(response.first, response.second);
     await TestMediator.instance.init();
+    Logger.off(tag, "loginTest::response=$response");
+  });
+  test('login test', () async {
+    final api = ApiFactory.create().auth();
+    final response = await api.loginOrThrow('emilys', 'emilyspass');
     Logger.off(tag, "loginTest::response=$response");
   });
 
@@ -22,7 +27,7 @@ void main() {
 
   test('read post test', () async {
     final api = ApiFactory.create().post();
-    final response = await api.readOrThrow();
+    final response = await api.readOrThrow(null);
     Logger.off(tag, "readPostTest::response=$response");
   });
 
