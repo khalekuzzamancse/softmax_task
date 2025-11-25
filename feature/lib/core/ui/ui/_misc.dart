@@ -51,3 +51,63 @@ extension ContextExtension on BuildContext{
   }
 }
 
+
+
+
+
+
+
+
+class BackHandlerDecorator extends StatelessWidget {
+  final Widget child;
+
+  const BackHandlerDecorator({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // Check if the back stack is empty
+        if (!Navigator.canPop(context)) {
+          // If no routes to pop, show a dialog or a custom message
+          final shouldExit = await _showExitDialog(context);
+          if (shouldExit) {
+            // Exit the app or perform any action
+            // For example: SystemNavigator.pop(); // Uncomment to exit the app
+            return true; // Allow the pop
+          }
+          return false; // Don't pop if exit is not confirmed
+        }
+        return true; // Allow the pop action if there are routes in the stack
+      },
+      child: child,
+    );
+  }
+
+  // Show exit confirmation dialog
+  Future<bool> _showExitDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Exit"),
+          content: Text("Are you sure you want to exit?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false), // Don't pop
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true), // Allow pop
+              child: Text("Yes"),
+            ),
+          ],
+        );
+      },
+    ) ??
+        false; // Default if dialog is dismissed
+  }
+}
+
+
+

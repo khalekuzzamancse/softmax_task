@@ -10,6 +10,55 @@ import 'package:feature/features/home/presentation/ui/post_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'features/auth/presentation/ui/login_screen.dart';
+class FeatureEntryPoint extends StatefulWidget {
+  const FeatureEntryPoint({super.key});
+
+  @override
+  State<FeatureEntryPoint> createState() => _FeatureEntryPointState();
+}
+
+class _FeatureEntryPointState extends State<FeatureEntryPoint> {
+  String? postId;
+  @override
+  void initState() {
+    super.initState();
+    deepLink();
+  }
+
+
+
+  void deepLink() async {
+    final appLinks = AppLinks();
+    final Uri? link = await appLinks.getInitialLink();
+    if (link != null) {
+      Logger.on("EntryPoint", 'deepLink: $link');
+      final String? path = link.path;  // e.g., /post/1
+      if (path != null && path.isNotEmpty) {
+        final segments = path.split('/');  // Split the path into segments
+        final String id = segments.last;
+        Logger.on("EntryPoint", 'Extracted ID: $id');
+        safeSetState((){
+          postId=id;
+        });
+      } else {
+        Logger.on("EntryPoint", 'No ID found in deep link path');
+      }
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final id=postId;
+    if(id==null){
+      return BackHandlerDecorator(child: EntryPoint());
+    }
+    else {
+      return BackHandlerDecorator(child: PostDetailsScreen(id,showBackAction: false));
+    }
+
+  }
+}
 
 class EntryPoint extends StatefulWidget {
   const EntryPoint({super.key});
@@ -20,12 +69,11 @@ class EntryPoint extends StatefulWidget {
 
 class _EntryPointState extends State<EntryPoint> {
   bool? isLoggedIn;
-  String? postId;
+
 
   @override
   void initState() {
     super.initState();
-    deepLink();
     AppMediator.setOnSessionExpire(() async {
       Logger.on("EntryPoint", 'onSessionExpire');
       AuthPreserverController.clear();
@@ -39,23 +87,6 @@ class _EntryPointState extends State<EntryPoint> {
     init();
   }
 
-
-  void deepLink() async {
-    final appLinks = AppLinks();
-    final link = await appLinks.getInitialLink(); // Retrieve the deep link
-    Logger.on("EntryPoint", 'deepLink: $link');
-    if (link != null) {
-      final String? id = link.queryParameters['id'];
-      if (id != null) {
-        setState(() {
-          postId = id;
-        });
-   //     context.push(PostDetailsScreen(id));
-      } else {
-
-      }
-    }
-  }
 
 
   void init() async {
@@ -74,9 +105,7 @@ class _EntryPointState extends State<EntryPoint> {
 
   @override
   Widget build(BuildContext context) {
-    if(postId!=null){
-      return PostDetailsScreen(postId!);
-    }
+
     if (isLoggedIn == null)
     if (isLoggedIn == null) {
       return SplashScreen();

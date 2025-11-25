@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Scaffold(body: SnackBarDecorator(child: EntryPoint())),
+      home: Scaffold(body: SnackBarDecorator(child: FeatureEntryPoint())),
     );
   }
 }

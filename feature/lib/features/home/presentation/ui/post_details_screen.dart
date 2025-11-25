@@ -5,11 +5,13 @@ import 'package:feature/features/home/domain/domain.dart';
 import 'package:feature/features/home/presentation/logic/post_details_controller.dart';
 import 'package:feature/features/misc/misc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PostDetailsScreen extends StatefulWidget {
+  final bool showBackAction;
   final String id;
 
-  PostDetailsScreen(this.id);
+  PostDetailsScreen(this.id,{this.showBackAction=true});
 
   @override
   State<PostDetailsScreen> createState() => _PostDetailsScreenState();
@@ -38,6 +40,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen>
   @override
   Widget build(BuildContext context) {
     final post = _model;
+    final showBackButton=widget.showBackAction;
     if (isLoading) {
       return Material(child: FullScreenShimmerEffect());
     }
@@ -47,12 +50,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen>
       return Scaffold(
         appBar: AppBar(
           title: Text("Details"),
-          leading: IconButton(
+          leading: showBackButton? IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context); // Go back to the previous screen
+              Navigator.pop(context);
             },
-          ),
+          ):SizedBox.shrink(),
         ),
         body: Padding(
           padding: EdgeInsets.all(16),
