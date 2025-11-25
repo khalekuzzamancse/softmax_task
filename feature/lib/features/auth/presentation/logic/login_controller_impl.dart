@@ -1,7 +1,7 @@
 import 'package:feature/core/core_language.dart';
 import 'package:feature/core/core_ui.dart';
-import 'package:feature/di_and_mediator/auth_preserver_controller.dart';
-import 'package:feature/di_and_mediator/global_mediator.dart';
+import 'package:feature/features/_core/di_and_mediator/auth_preserver_controller.dart';
+import 'package:feature/features/_core/di_and_mediator/global_mediator.dart';
 import 'package:feature/features/auth/domain/domain.dart';
 import 'package:feature/features/auth/presentation/logic/login_controller.dart';
 

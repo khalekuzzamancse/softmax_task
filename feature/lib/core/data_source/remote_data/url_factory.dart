@@ -3,31 +3,47 @@ part of '../data_source.dart';
 abstract interface class URLFactory {
   ///Instead of "create" used names as "urls" so that can call as
   /// URLFactory.urls.activeLoansRead, for better readability
-  static  URLFactory urls = URLFactoryRemoteServer._();
+  static URLFactory urls = URLFactoryRemoteServer._();
+
   String get login;
+
   String get user;
+
   String get postRead;
-  String  postDetails(String id);
+
+  String postDetails(String id);
+
+  String searchPost(String query);
 
   get refreshToken => null;
 }
+
 class URLFactoryRemoteServer implements URLFactory {
   ///To force pure abstraction and single source of instance creation
   URLFactoryRemoteServer._();
-  final base="https://dummyjson.com";
+
+  final base = "https://dummyjson.com";
+
   @override
   String get login => '$base/auth/login';
+
   @override
   String get user => '$base/auth/me';
+
   @override
   String get postRead => "$base/posts?limit=20&skip=0";
+
   @override
-  String postDetails(String id)=>"$base/posts/$id";
+  String postDetails(String id) => "$base/posts/$id";
 
   @override
   get refreshToken => throw UnimplementedError();
 
-
+  @override
+  String searchPost(String query) {
+    final encodedSearchTerm = Uri.encodeComponent(query);
+    return Uri.parse('$base/posts/search?q=$encodedSearchTerm').toString();
+  }
 }
 
 class URLFactoryLocalServer implements URLFactory {
@@ -52,11 +68,13 @@ class URLFactoryLocalServer implements URLFactory {
 
   @override
   String postDetails(String id) {
-
     // TODO: implement postDetails
     throw UnimplementedError();
   }
 
-
+  @override
+  String searchPost(String query) {
+    // TODO: implement searchPost
+    throw UnimplementedError();
+  }
 }
-

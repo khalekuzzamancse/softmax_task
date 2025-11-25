@@ -33,7 +33,7 @@ class AuthPreserverController {
     Logger.keyValueOff(tag, 'saveToken','refresh_token',refreshToken);
   }
 
-  static Future<String> retrieveTokenOrThrow() async {
+  static Future<String> readAccessTokenOrThrow() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? accessToken = prefs.getString(_keyAccessToken);
     final String? refreshToken = prefs.getString(_keyRefreshToken);

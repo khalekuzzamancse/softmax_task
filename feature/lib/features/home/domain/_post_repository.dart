@@ -2,6 +2,8 @@ part of 'domain.dart';
 abstract interface class PostRepository{
   Future<PaginationWrapper<List<PostModel>>> readOrThrow(String? nextUrl);
   Future<PostModel> detailsOrThrow(String id);
+  Future<PaginationWrapper<List<PostModel>>> searchOrThrow(String query);
+
 }
 
 class PostModel {

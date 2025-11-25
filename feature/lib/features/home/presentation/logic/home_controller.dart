@@ -1,14 +1,11 @@
-
 import 'package:feature/features/auth/domain/domain.dart';
 import 'package:feature/features/home/domain/domain.dart';
 
-abstract interface class HomeController{
-  Stream<UserModel?> get user;
+//@formatter:off
+abstract interface class HomeController {
   Stream<List<PostModel>> get posts;
-  Stream<bool> get isLoading;
-  Stream<bool> get isNextLoading;
-  void readUser();
-  void readPost();
-  void search(String query);
-  void onPostListEnd();
+  Future<UserModel?> readUser();
+  Future<void> readPost();
+  Future<void> search(String query);
+  Future<void> readNext();
 }

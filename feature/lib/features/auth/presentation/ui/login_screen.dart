@@ -1,4 +1,5 @@
 import 'package:feature/core/core_ui.dart';
+import 'package:feature/features/_core/di_and_mediator/di_container.dart';
 import 'package:feature/features/auth/data/data.dart';
 import 'package:feature/features/auth/presentation/logic/login_controller.dart';
 import 'package:feature/features/auth/presentation/logic/login_controller_impl.dart';
@@ -9,13 +10,14 @@ part '_view_strategy.dart';
 
 //@formatter:off
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback onLoginSuccess;
+  const LoginScreen({super.key, required this.onLoginSuccess});
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen>  with LoadingStateMixin{
-  final LoginController controller=LoginControllerImpl(AuthRepositoryImpl.create());
+  final controller=DiContainer.loginController();
   final TextEditingController _usernameController = TextEditingController(text: "emilys");
   final TextEditingController _passwordController = TextEditingController(text: "emilyspass");
   late var error=LoginUiError();
@@ -70,7 +72,10 @@ class _LoginScreenState extends State<LoginScreen>  with LoadingStateMixin{
                             height: 48,
                             backgroundColor: enabled?AppColor.primary:Colors.grey,
                             onPressed:enabled? () async{
-                              _.login(this);
+                              final success=_.login(this);
+                              if(await success){
+                                widget.onLoginSuccess();
+                              }
                             }:null
                         ),
                         const SpacerVertical(16),

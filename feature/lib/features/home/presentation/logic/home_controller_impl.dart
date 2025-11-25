@@ -1,4 +1,5 @@
 import 'package:feature/core/core_language.dart';
+import 'package:feature/features/_core/di_and_mediator/global_mediator.dart';
 import 'package:feature/features/auth/domain/domain.dart';
 import 'package:feature/features/home/domain/domain.dart';
 import 'package:feature/features/home/presentation/logic/home_controller.dart';
@@ -8,13 +9,9 @@ import 'package:rxdart/rxdart.dart';
 class HomeControllerImpl implements HomeController {
   final AuthRepository authRepository;
   final PostRepository postRepository;
-  final _user=BehaviorSubject<UserModel?>.seeded(null);
   final _posts=BehaviorSubject<List<PostModel>>.seeded([]);
-  final _isLoading=BehaviorSubject<bool>.seeded(false);
-  final _isNextLoading=BehaviorSubject<bool>.seeded(false);
-  var _lastQuery="";
   String? _nextUrl;
-  late final tag=runtimeType.toString();
+  late final tag = runtimeType.toString();
 
   HomeControllerImpl({
     required this.authRepository,
@@ -22,62 +19,60 @@ class HomeControllerImpl implements HomeController {
   });
 
   @override
-  Stream<bool> get isLoading => _isLoading.stream;
+  Stream<List<PostModel>> get posts => _posts.stream;
   @override
-  Stream<bool> get isNextLoading => _isNextLoading.stream;
-  @override
-  Stream<UserModel?> get user => _user.stream;
-  @override
-  Stream<List<PostModel>> get posts =>_posts.stream;
-
-
-  @override
-  void readPost() async{
+  Future<void> readPost() async {
     try {
-      final wrapper= await postRepository.readOrThrow(null);
+      final wrapper = await postRepository.readOrThrow(null);
+      _nextUrl = wrapper.nextUrl;
       _posts.add(wrapper.data);
-      _nextUrl=wrapper.nextUrl;
+    } catch (e) {
+      AppMediator.onError(e);
+       List.empty();
     }
-    catch (_) {}
   }
 
   @override
-  void readUser() async{
+  Future<UserModel?> readUser() async {
     try {
-      final model= await authRepository.userOrThrow();
-      _user.add(model);
+      final model = await authRepository.userOrThrow();
       Logger.off(tag, "user:$model");
-    }
-    catch (e) {
-      Logger.on(tag, "userReadError:$e");
+      return model;
+    } catch (e) {
+      AppMediator.onError(e);
+      Logger.off(tag, "userReadError:$e");
+      return null;
     }
   }
 
   @override
-  void onPostListEnd()async {
-    Logger.on(tag, "onPostListEnd:$_nextUrl");
-    if(_nextUrl==null) return;
+  Future<void> readNext() async {
+    if (_nextUrl == null) return null;
     try {
-      final wrapper= await postRepository.readOrThrow(_nextUrl);
-      _posts.add(_posts.value+wrapper.data);
-      _nextUrl=wrapper.nextUrl;
+      final wrapper = await postRepository.readOrThrow(_nextUrl);
+      _nextUrl = wrapper.nextUrl;
+      _posts.add(wrapper.data);
+    } catch (e) {
+      AppMediator.onError(e);
 
     }
-    catch (_) {}
   }
 
   @override
-  void search(String query) async{
-    _lastQuery=query;
-    Logger.on(tag, "search:$query");
-    final name=await CorePlatform().deviceName();
-    Logger.on(tag, "name:$name");
-    final version=await CorePlatform().getPlatformVersion();
-
-    Logger.on(tag, "version:$version");
-    if(query.isEmpty&&query!=_lastQuery){
-
+  Future<void> search(String query) async {
+    try{
+      Logger.off(tag, "search:query=$query");
+      if (query.isEmpty) {
+         return await readPost();
+      }
+       final wrapper= await postRepository.searchOrThrow(query);
+      _posts.add(wrapper.data);
     }
-
+    catch(e){
+      AppMediator.onError(e);
+      Logger.off(tag, "search:Error=$e");
+      return null;
+    }
   }
+
 }

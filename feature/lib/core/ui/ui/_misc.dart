@@ -51,27 +51,3 @@ extension ContextExtension on BuildContext{
   }
 }
 
-String? _currentMsg;
-void showSnackBar(String? message,{String? tag})async {
-  if(tag!=null){
-    Logger.on('$tag::showSnackBar', '$message');
-  }
-  //already the same message shown
-  if(_currentMsg==message){
-    return;
-  }
-  _currentMsg=message;
-  if(message==null) {
-    return;
-  }
-  await Get.snackbar('','',
-      titleText: Text(message),
-      duration: const Duration(seconds: 3),
-      snackPosition: SnackPosition.BOTTOM,
-      colorText: Colors.black,
-      borderRadius: 10,
-      backgroundColor: Colors.green,
-      maxWidth: 300)
-      .future;
-  _currentMsg=null;
-}

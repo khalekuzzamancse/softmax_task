@@ -38,8 +38,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // Use custom width if provided
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
@@ -90,8 +89,9 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
             IconButton(
               icon: Icon(Icons.clear, color: Colors.grey),
               onPressed: () {
+                searchController.clear();
                 setState(() {
-                  searchController.clear();
+                  query="";
                 });
                 widget.onQuery(''); // Call the onQuery function with an empty string
                 _focusNode.unfocus(); // Remove focus from the TextField

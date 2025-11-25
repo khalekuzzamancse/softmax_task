@@ -13,7 +13,7 @@ final class LoginViewController {
     self._usernameController.text = "emilys";
     self._passwordController.text = "emilyspass";
   }
-  void login(_LoginScreenState self) async {
+  Future<bool> login(_LoginScreenState self) async {
     final username = self._usernameController.text;
     final password = self._passwordController.text;
     final error = self.controller.validate(username, password);
@@ -21,7 +21,7 @@ final class LoginViewController {
       self.safeSetState(() {
         self.error = error;
       });
-      return;
+      return false;
     }
     ;
     if (self.context.mounted) FocusScope.of(self.context).unfocus();
@@ -29,8 +29,9 @@ final class LoginViewController {
     final success = await self.controller.login(username, password);
     self.stopLoading();
     if (success) {
-      self.context.push(HomeScreen());
+      return true;
     }
+    return false;
   }
   void dispose(_LoginScreenState self) {
     self._usernameController.dispose();

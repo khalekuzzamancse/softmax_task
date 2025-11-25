@@ -6,10 +6,11 @@ class _HttpClient implements NetworkClient {
   //@formatter:off
   Future<String> getOrThrow({required String url, Headers? headers}) async {
     final tag = '$_class::get';
-    Logger.off(tag, 'url:$url, header:$headers');
+    Logger.on(tag, 'url:$url');
+    Logger.off(tag, 'header,$headers');
     final response = await http.get(Uri.parse(url), headers: headers?.toMap());
     Logger.off(tag, 'response:${response.body}');
-    _throwTokenExpireExceptionOrDoNothing(response.body, tag);
+    _throwTokenExpireExceptionOrDoNothing(response, tag);
     return response.body;
   }
 
@@ -25,7 +26,7 @@ class _HttpClient implements NetworkClient {
       headers: {'Content-Type': 'application/json; charset=UTF-8', if (headers != null) ...headers.toMap(),},
     );
     Logger.off(tag, 'response:${response.body}');
-    _throwTokenExpireExceptionOrDoNothing(response.body, tag);
+    _throwTokenExpireExceptionOrDoNothing(response, tag);
     return response.body;
   }
 
@@ -43,7 +44,7 @@ class _HttpClient implements NetworkClient {
     );
     Logger.off(tag, 'response:$response');
     Logger.off(tag, 'responseBody:${response.body}');
-    _throwTokenExpireExceptionOrDoNothing(response.body, tag);
+    _throwTokenExpireExceptionOrDoNothing(response, tag);
     return response.body;
   }
 
@@ -60,7 +61,7 @@ class _HttpClient implements NetworkClient {
         body: jsonEncode(payload));
     Logger.off(tag, 'response:$response');
     Logger.off(tag, 'responseBody:${response.body}');
-    _throwTokenExpireExceptionOrDoNothing(response.body, tag);
+    _throwTokenExpireExceptionOrDoNothing(response, tag);
     return      response.body;
   }
 
@@ -71,7 +72,7 @@ class _HttpClient implements NetworkClient {
     Logger.off(tag, 'url:$url');
     final response = await http.delete(Uri.parse(url), headers: headers?.toMap());
     Logger.off(tag, 'response:${response.body}');
-    _throwTokenExpireExceptionOrDoNothing(response.body, tag);
+    _throwTokenExpireExceptionOrDoNothing(response, tag);
     return response.body;
   }
 

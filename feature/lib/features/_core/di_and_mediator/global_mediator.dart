@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:feature/core/core_language.dart';
 import 'package:feature/core/core_network.dart';
+import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
 import 'auth_preserver_controller.dart';
 
@@ -8,9 +11,23 @@ class AppMediator implements AuthExpireObserver, TokenManager {
   static final AppMediator instance = AppMediator._();
   static final _messageToUi = BehaviorSubject<String?>.seeded(null);
   static Stream<String?> messageToUI = _messageToUi.stream;
+  static  VoidCallback? _onSessionExpire;
+  static void setOnSessionExpire(VoidCallback onSessionExpire) {
+    _onSessionExpire = onSessionExpire;
+  }
+
 
   static void onError(Object e) {
-    var msg = (e is CustomException) ? e.message : "Something went wrong";
+    if(e is UnauthorizedException){
+      instance.onSessionExpire();
+      return;
+    }
+    String msg = "Something went wrong";
+    if (e is CustomException) {
+      msg = e.message;
+    } else if (e is ClientException) {
+      msg = 'Unable to connect. Check your internet or address.';
+    }
     showSnackBar(msg);
   }
 
@@ -21,16 +38,19 @@ class AppMediator implements AuthExpireObserver, TokenManager {
     await delayInMs(3000);
     _messageToUi.add(null);
   }
-  static String toSnackBarMessage(String message){
+
+  static String toSnackBarMessage(String message) {
     var msg = message;
     if (msg.length >= 80) {
       msg = msg.substring(0, 77) + '...';
     }
     return msg;
   }
+
   static bool alreadyShowing(message) {
     return _messageToUi.value == message;
   }
+
   ///await to make sure dependency...
   Future<void> init() async {
     NetworkClientDecorator.registerAsListener(this);
@@ -45,14 +65,12 @@ class AppMediator implements AuthExpireObserver, TokenManager {
   @override
   void onSessionExpire() {
     Logger.on(tag, 'onSessionExpire');
-    //  Get.offAndToNamed(AppRouteService.login);
+    _onSessionExpire?.call();
   }
 
   @override
-  Future<String> getTokenOrThrow() =>
-      AuthPreserverController.retrieveTokenOrThrow();
+  Future<String> getTokenOrThrow() => AuthPreserverController.readAccessTokenOrThrow();
 
   @override
-  Future<void> updateAccessToken() =>
-      AuthPreserverController.refreshAccessToken();
+  Future<void> updateAccessToken() => AuthPreserverController.refreshAccessToken();
 }

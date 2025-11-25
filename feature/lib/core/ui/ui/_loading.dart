@@ -48,7 +48,7 @@ class LoadingOverlay extends StatelessWidget {
 }
 class NoDataView extends StatelessWidget {
   final Color fontColor;
-  const NoDataView({super.key,this.fontColor=Colors.white});
+  const NoDataView({super.key,this.fontColor=Colors.black});
 
   @override
   Widget build(BuildContext context) {

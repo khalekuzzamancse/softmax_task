@@ -1,8 +1,8 @@
 part of 'data.dart';
 
-
 class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl._();
+
   static PostRepository create() => PostRepositoryImpl._();
 
   @override
@@ -13,13 +13,14 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<PaginationWrapper<List<PostModel>>> readOrThrow(String? nextUrl) async {
+  Future<PaginationWrapper<List<PostModel>>> readOrThrow(
+    String? nextUrl,
+  ) async {
     final postApi = ApiFactory.create().post();
-    final wrapper = await postApi.readOrThrow( nextUrl);
+    final wrapper = await postApi.readOrThrow(nextUrl);
     final entities = wrapper.data.map((e) => mapToPostModel(e)).toList();
     return PaginationWrapper(data: entities, nextUrl: wrapper.nextUrl);
   }
-
 
   PostModel mapToPostModel(Post entity) {
     return PostModel(
@@ -32,5 +33,13 @@ class PostRepositoryImpl implements PostRepository {
       likes: entity.reactions.likes,
       dislikes: entity.reactions.dislikes,
     );
+  }
+
+  @override
+  Future<PaginationWrapper<List<PostModel>>> searchOrThrow(String query) async {
+    final postApi = ApiFactory.create().post();
+    final wrapper = await postApi.searchOrThrow(query);
+    final entities = wrapper.data.map((e) => mapToPostModel(e)).toList();
+    return PaginationWrapper(data: entities, nextUrl: wrapper.nextUrl);
   }
 }
