@@ -1,13 +1,13 @@
 part of '../../core_ui.dart';
 class RoundedButton extends StatelessWidget {
   final Color backgroundColor;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String label;
   final double? height;
 
   const RoundedButton({
     Key? key,
-    this.backgroundColor = AppColor.primary,
+    required this.backgroundColor,
     required this.onPressed,
     required this.label, this.height,
   }) : super(key: key);

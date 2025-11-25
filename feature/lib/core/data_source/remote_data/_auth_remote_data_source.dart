@@ -11,9 +11,9 @@ abstract class AuthRDSTemplate implements AuthApi {
 
   dynamic createRefreshTokenPayload(String refreshToken);
 
-  User parseUserOrThrow(dynamic response);
+  User parseUserOrThrow(String response);
 
-  Pair<String, String> parseTokensOrThrow(dynamic response);
+  Pair<String, String> parseTokensOrThrow(String response);
 
   final client = NetworkClient.createBaseClient();
 
@@ -23,14 +23,14 @@ abstract class AuthRDSTemplate implements AuthApi {
     final payload = createLoginPayload(username, password);
     final response = await client.postOrThrow(url: loginUrl, payload: payload);
     Logger.off(tag, "response=$response");
-    return parseTokensOrThrow(jsonDecode(response));
+    return parseTokensOrThrow(response);
   }
   //@formatter:off
   @override
   Future<User> userOrThrow() async {
     late final client = NetworkClient.createClientDecorator();
     final response = await client.getOrThrow(url: readUserUrl);
-    return parseUserOrThrow(jsonDecode(response));
+    return parseUserOrThrow(response);
   }
   //@formatter:off
   @override
@@ -39,12 +39,12 @@ abstract class AuthRDSTemplate implements AuthApi {
         url: URLFactory.urls.refreshToken,
         payload: createRefreshTokenPayload(refreshToken)
     );
-    return parseTokensOrThrow(jsonDecode(response));
+    return parseTokensOrThrow(response);
 }
 }
 
 
-class AuthRemoteDataSource extends AuthRDSTemplate {
+class   AuthRemoteDataSource extends AuthRDSTemplate {
   //Forcing abstraction
   AuthRemoteDataSource._();
   static AuthApi create() => AuthRemoteDataSource._();
@@ -59,8 +59,9 @@ class AuthRemoteDataSource extends AuthRDSTemplate {
   }
 
   @override
-  User parseUserOrThrow(response) {
-    final json = response as Map<String, dynamic>;
+  User parseUserOrThrow(String response) {
+    throwFailureOrSkip(response, tag);
+    final json = jsonDecode(response) as Json;
     final user = User(
         id: "${json['id']}",
         username: json['username'],
@@ -73,9 +74,11 @@ class AuthRemoteDataSource extends AuthRDSTemplate {
 
 
 @override
-Pair<String, String> parseTokensOrThrow(response) {
-    final access=response['accessToken'];
-    final refresh=response['refreshToken'];
+Pair<String, String> parseTokensOrThrow(String response) {
+    throwFailureOrSkip(response, tag);
+    final json = jsonDecode(response) as Json;
+    final access=json['accessToken'];
+    final refresh=json['refreshToken'];
    return Pair(access,refresh);
 
 }

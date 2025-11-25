@@ -1,4 +1,23 @@
 part of '../../core_ui.dart';
+mixin LoadingStateMixin<T extends StatefulWidget> on State<T> {
+  bool isLoading = false;
+
+  void startLoading() => _setLoading(true);
+
+  void stopLoading() => _setLoading(false);
+
+  void _setLoading(bool value) {
+    //avoid unnecessary rebuild
+    if(value==isLoading){
+      return;
+    }
+    if (mounted) {
+      safeSetState(() {
+        isLoading = value;
+      });
+    }
+  }
+}
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
   final Widget child;

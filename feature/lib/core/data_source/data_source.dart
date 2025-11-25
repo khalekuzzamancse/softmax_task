@@ -6,4 +6,5 @@ part 'api/_post_api.dart';
 part 'remote_data/_post_remote_data_source.dart';
 part 'remote_data/url_factory.dart';
 part 'remote_data/_auth_remote_data_source.dart';
+part 'remote_data/_misc.dart';
 part 'api_factory.dart';

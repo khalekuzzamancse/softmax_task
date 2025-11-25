@@ -13,9 +13,9 @@ abstract class PostRDSTemplate implements PostApi {
 
   @override
   Future<PaginationWrapper<List<Post>>> readOrThrow(String? nextUrl) async {
-    Logger.on(tag, "readOrThrow:$nextUrl");
+    Logger.off(tag, "readOrThrow:$nextUrl");
     final response = await client.getOrThrow(url: nextUrl ?? url);
-    Logger.on(tag, "readOrThrow:$response");
+    Logger.off(tag, "readOrThrow:$response");
     return parseOrThrow(jsonDecode(response));
   }
 
