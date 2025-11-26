@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 class HomeControllerImpl implements HomeController {
   final AuthRepository authRepository;
   final PostRepository postRepository;
-  final _posts=BehaviorSubject<List<PostModel>>.seeded([]);
+  final _posts = BehaviorSubject<List<PostModel>>.seeded([]);
   String? _nextUrl;
   late final tag = runtimeType.toString();
 
@@ -20,6 +20,7 @@ class HomeControllerImpl implements HomeController {
 
   @override
   Stream<List<PostModel>> get posts => _posts.stream;
+
   @override
   Future<void> readPost() async {
     try {
@@ -28,7 +29,7 @@ class HomeControllerImpl implements HomeController {
       _posts.add(wrapper.data);
     } catch (e) {
       AppMediator.onError(e);
-       List.empty();
+      List.empty();
     }
   }
 
@@ -51,28 +52,27 @@ class HomeControllerImpl implements HomeController {
     try {
       final wrapper = await postRepository.readOrThrow(_nextUrl);
       _nextUrl = wrapper.nextUrl;
-      _posts.add(wrapper.data);
+      final posts = _posts.value.toList(); //copy
+      posts.addAll(wrapper.data);
+      _posts.add(posts);
     } catch (e) {
       AppMediator.onError(e);
-
     }
   }
 
   @override
   Future<void> search(String query) async {
-    try{
+    try {
       Logger.off(tag, "search:query=$query");
       if (query.isEmpty) {
-         return await readPost();
+        return await readPost();
       }
-       final wrapper= await postRepository.searchOrThrow(query);
+      final wrapper = await postRepository.searchOrThrow(query);
       _posts.add(wrapper.data);
-    }
-    catch(e){
+    } catch (e) {
       AppMediator.onError(e);
       Logger.off(tag, "search:Error=$e");
       return null;
     }
   }
-
 }
