@@ -96,9 +96,9 @@ adb shell am start -W -a android.intent.action.VIEW -d "softmax://post/1" kzcs.s
 
 | Description       | Link                            |
 |:------------------|:--------------------------------|
-| **Video Preview** | \[https://youtu.be/gZka3n9K2rY] |
-| **APK Download**  | \[download the `android-release.apk`from this current directory]                     |
-| **Latest Code and App**   | \[ checkout to the `dev` branch]  |
+| **Video Preview** | \[https://youtu.be/6E3WyiaPLPM] |
+| **APK and Video Download**  | https://drive.google.com/drive/folders/1m4zqG4L-5rrH2X-ZIGuD8P4aj7rPkbdM                     |
+| **Latest Code**   | \[ checkout to the `dev` branch]  |
 
 ---
 # Technical Details
