@@ -1,10 +1,10 @@
-export 'features/_core/di_and_mediator/global_mediator.dart';
+export 'features/_core/global_mediator.dart';
 
 import 'package:app_links/app_links.dart';
 import 'package:feature/core/core_language.dart';
 import 'package:feature/core/core_ui.dart';
-import 'package:feature/features/_core/di_and_mediator/auth_preserver_controller.dart';
-import 'package:feature/features/_core/di_and_mediator/global_mediator.dart';
+import 'package:feature/features/_core/auth_preserver_controller.dart';
+import 'package:feature/features/_core/global_mediator.dart';
 import 'package:feature/features/home/presentation/ui/home_screen.dart';
 import 'package:feature/features/home/presentation/ui/post_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +140,7 @@ class SplashScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'Welcome to MyApp',
+              'Welcome to Softmax',
               style: TextStyle(fontSize: 24.0, color: Colors.white),
             ),
           ],

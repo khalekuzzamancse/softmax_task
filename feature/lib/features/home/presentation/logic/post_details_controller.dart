@@ -1,5 +1,5 @@
 import 'package:feature/core/core_language.dart';
-import 'package:feature/features/_core/di_and_mediator/global_mediator.dart';
+import 'package:feature/features/_core/global_mediator.dart';
 import 'package:feature/features/home/domain/domain.dart';
 
 abstract interface class PostDetailsController {

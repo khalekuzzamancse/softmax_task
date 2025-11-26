@@ -10,18 +10,23 @@ part of 'login_screen.dart';
 /// This also helps eliminate redundancy.
 final class LoginViewController {
   void init(_LoginScreenState self) {
-    self._usernameController.text = "emilys";
-    self._passwordController.text = "emilyspass";
+    self._usernameController.text = "";
+    self._passwordController.text = "";
   }
   Future<bool> login(_LoginScreenState self) async {
-    final username = self._usernameController.text;
-    final password = self._passwordController.text;
+    final username = self._usernameController.text.trim();
+    final password = self._passwordController.text.trim();
     final error = self.controller.validate(username, password);
     if (error != null) {
       self.safeSetState(() {
         self.error = error;
       });
       return false;
+    }
+    else{
+      self.safeSetState(() {
+        self.error = LoginUiError();
+      });
     }
     ;
     if (self.context.mounted) FocusScope.of(self.context).unfocus();

@@ -1,5 +1,5 @@
 import 'package:feature/core/core_ui.dart';
-import 'package:feature/features/_core/di_and_mediator/di_container.dart';
+import 'package:feature/features/_core/di_container.dart';
 import 'package:feature/features/auth/data/data.dart';
 import 'package:feature/features/auth/presentation/logic/login_controller.dart';
 import 'package:feature/features/auth/presentation/logic/login_controller_impl.dart';

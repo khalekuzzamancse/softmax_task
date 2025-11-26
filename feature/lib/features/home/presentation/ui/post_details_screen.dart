@@ -1,5 +1,5 @@
 import 'package:feature/core/core_ui.dart';
-import 'package:feature/features/_core/di_and_mediator/di_container.dart';
+import 'package:feature/features/_core/di_container.dart';
 import 'package:feature/features/home/data/data.dart';
 import 'package:feature/features/home/domain/domain.dart';
 import 'package:feature/features/home/presentation/logic/post_details_controller.dart';

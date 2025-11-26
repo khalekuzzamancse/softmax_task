@@ -1,7 +1,7 @@
 import 'package:feature/core/core_language.dart';
 import 'package:feature/core/core_ui.dart';
-import 'package:feature/features/_core/di_and_mediator/di_container.dart';
-import 'package:feature/features/_core/di_and_mediator/global_mediator.dart';
+import 'package:feature/features/_core/di_container.dart';
+import 'package:feature/features/_core/global_mediator.dart';
 import 'package:feature/features/auth/data/data.dart' show AuthRepositoryImpl;
 import 'package:feature/features/home/data/data.dart';
 import 'package:feature/features/home/domain/domain.dart';
@@ -95,29 +95,33 @@ class _CustomAppBarState extends State<CustomAppBar> with LoadingStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return FullScreenShimmerEffect();
-    }
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Row(
           children: [
-            SpacerHorizontal(16),
-            image == null
-                ? SizedBox.shrink()
-                : CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(image!),
-                  ),
-            SpacerHorizontal(16),
             Expanded(
-              child: Text(
-                name != null ? capitalizeEachWord(name!) : 'Loading...',
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              child: isLoading?FullScreenShimmerEffect():Row(
+                children: [
+                  SpacerHorizontal(16),
+                  image == null
+                      ? SizedBox.shrink()
+                      : CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(image!),
+                        ),
+                  SpacerHorizontal(16),
+                  Expanded(
+                    child: Text(
+                      name != null ? capitalizeEachWord(name!) : 'Loading...',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SpacerHorizontal(4),
